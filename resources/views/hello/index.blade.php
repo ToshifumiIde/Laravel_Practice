@@ -7,8 +7,15 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>hello index</h1>
-    <p>{{$msg}}</p>
+    <h1>Hello/Index</h1>
+    {{-- <p>{{$msg}}</p> --}}
     {{-- <p>{{$id}}</p> --}}
+    <p>{{$msg}}</p>
+    {{-- <p>{{$name}}</p> --}}
+    <ul>
+        @foreach($data as $item)
+        <li>{{$item}}</li>
+        @endforeach
+    </ul>
 </body>
 </html>

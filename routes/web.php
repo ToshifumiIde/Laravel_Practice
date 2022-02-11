@@ -25,17 +25,23 @@ Route::get('/', function () {
 // Route::get("/hello/{id}", [HelloController::class, "index"])->where("id", "[0-9]+");
 // Route::get("hello/other", [HelloController::class, "other"]);
 
+// 1-1
 // Route::middleware()->group(function(){})でミドルウェアを複数に設定可能
-Route::middleware([HelloMiddleware::class])->group(function () {
-    Route::get("hello", [HelloController::class, "index"]);
-    Route::get("hello/other", [HelloController::class, "other"]);
-});
+// Route::middleware([HelloMiddleware::class])->group(function () {
+//     Route::get("hello", [HelloController::class, "index"]);
+//     Route::get("hello/other", [HelloController::class, "other"]);
+// });
 
+// // Sampleディレクトリに含まれるSampleControllerを名前空間でグループ化する
+// Route::namespace("Sample")->group(function () {
+//     Route::get("/sample", [SampleController::class, "index"]);
+//     Route::get("sample/other", [SampleController::class, "other"]);
+// });
 
-// Sampleディレクトリに含まれるSampleControllerを名前空間でグループ化する
-Route::namespace("Sample")->group(function () {
-    Route::get("/sample", [SampleController::class, "index"]);
-    Route::get("sample/other", [SampleController::class, "other"]);
-});
+// Route::get("/hello/{person}", [HelloController::class, "index"]);
 
-Route::get("/hello/{person}", [HelloController::class, "index"]);
+// 1-2
+Route::get("/hello", [HelloController::class, "index"]);
+Route::get("/hello/other", [HelloController::class, "other"]);
+
+Route::get("/sample", [SampleCOntroller::class, "index"])->name("sample");

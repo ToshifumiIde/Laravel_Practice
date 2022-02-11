@@ -7,9 +7,21 @@ use Illuminate\Http\Request;
 
 class SampleController extends Controller {
     public function index(Request $request) {
+        // 1-1
+        // $data = [
+        //     "msg" => "SAMPLE-CONTROLLER-INDEX!",
+        // ];
+        // return view("hello.index", $data);
+        // 1-2
+        // HelloController内の__construct(){}メソッド内で定義したconfig(["sample.message" => "新しいメッセージ"]);
+        // が引き継がれるか確認
+        $sample_msg = config("sample.message"); //結論：引き継がれない
+        $sample_data = config("sample.data");
         $data = [
-            "msg" => "SAMPLE-CONTROLLER-INDEX!",
+            "msg" => $sample_msg,
+            "data" => $sample_data,
         ];
+
         return view("hello.index", $data);
     }
 
