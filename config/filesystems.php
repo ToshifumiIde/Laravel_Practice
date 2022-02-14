@@ -32,27 +32,46 @@ return [
 
         'local' => [
             'driver' => 'local',
-            'root' => storage_path('app'),
+            'root'   => storage_path('app'),
         ],
 
         'public' => [
-            'driver' => 'local',
-            'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
+            'driver'     => 'local',
+            'root'       => storage_path('app/public'),
+            'url'        => env('APP_URL') . '/storage',
             'visibility' => 'public',
         ],
 
         's3' => [
             'driver' => 's3',
-            'key' => env('AWS_ACCESS_KEY_ID'),
+            'key'    => env('AWS_ACCESS_KEY_ID'),
             'secret' => env('AWS_SECRET_ACCESS_KEY'),
             'region' => env('AWS_DEFAULT_REGION'),
             'bucket' => env('AWS_BUCKET'),
-            'url' => env('AWS_URL'),
+            'url'    => env('AWS_URL'),
             'endpoint' => env('AWS_ENDPOINT'),
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
         ],
 
+        "logs" => [
+            "driver" => "local",
+            "root"   => storage_path("logs"),
+            "url"    => env("APP_URL") . "storage/logs",
+        ],
+
+        // 1-3 ファイルシステム
+        // ローカルPCにアクセスすることも可能
+        "mac" => [
+            "driver" => "local",
+            "root" => "/Users/idetoshifumi/desktop/post_code_js",
+        ],
+
+        "ftp" => [
+            "driver"   => "ftp",
+            "host"     => "ホスト名",
+            "username" => "利用者名",
+            "password" => "password",
+        ],
     ],
 
     /*
