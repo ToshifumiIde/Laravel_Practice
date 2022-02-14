@@ -15,7 +15,7 @@ class SampleController extends Controller {
         // 1-2
         // HelloController内の__construct(){}メソッド内で定義したconfig(["sample.message" => "新しいメッセージ"]);
         // が引き継がれるか確認
-        $sample_msg = config("sample.message"); //結論：引き継がれない
+        $sample_msg  = config("sample.message"); //結論：引き継がれない
         $sample_data = config("sample.data");
         $data = [
             "msg" => $sample_msg,

@@ -41,7 +41,6 @@ Route::get('/', function () {
 // Route::get("/hello/{person}", [HelloController::class, "index"]);
 
 // 1-2
-Route::get("/hello", [HelloController::class, "index"]);
+Route::get("/hello",       [HelloController::class, "index"]);
 Route::get("/hello/other", [HelloController::class, "other"]);
-
-Route::get("/sample", [SampleCOntroller::class, "index"])->name("sample");
+Route::get("/sample",      [SampleCOntroller::class, "index"])->name("sample");
