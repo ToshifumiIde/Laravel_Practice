@@ -46,6 +46,11 @@ Route::get('/', function () {
 // Route::get("/sample",      [SampleController::class, "index"])->name("sample");
 
 //1-3
+// Route::get("/hello", [HelloController::class, "index"])->name("hello");
+// Route::get("/hello/{msg}", [HelloController::class, "other"]);
+// ROute::post("/hello/other" , [HelloController::class , "other"]);
+
+// 1-4 request and response
 Route::get("/hello", [HelloController::class, "index"])->name("hello");
-Route::get("/hello/{msg}", [HelloController::class, "other"]);
-ROute::post("/hello/other" , [HelloController::class , "other"]);
+Route::post("/hello", [HelloController::class, "index"]);
+Route::get("hello/other", [HelloController::class, "other"]);
