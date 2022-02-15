@@ -14,7 +14,7 @@ class HelloMiddleware {
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
     public function handle(Request $request, Closure $next) {
-        $hello = "Hello! This is message from Middleware";
+        $hello = "Hello! This is message from HelloMiddleware!!";
         $bye = "Good-bye, Middleware";
         $data = [
             "hello" => $hello,

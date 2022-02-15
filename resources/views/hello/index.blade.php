@@ -16,11 +16,11 @@
         <li>{{$item}}</li>
         @endforeach
     </ul>
-    <form action="/hello" method="post">
+    {{-- <form action="/hello" method="post">
     @csrf
         <input type="text" name="name" placeholder="お名前">
     <input type="mail" name="mail" placeholder="メールアドレス">
     <input type="submit">
-    </form>
+    </form> --}}
 </body>
 </html>

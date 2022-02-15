@@ -4,8 +4,7 @@ namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
-class Kernel extends HttpKernel
-{
+class Kernel extends HttpKernel {
     /**
      * The application's global HTTP middleware stack.
      *
@@ -21,6 +20,8 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        // 2-3 グローバルミドルウェアの追記(middlewareGroupsに記述したのでコメントアウト)
+        // \App\Http\Middleware\MyMiddleware::class,
     ];
 
     /**
@@ -43,6 +44,11 @@ class Kernel extends HttpKernel
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ],
+        // 2-3 middleware(グループmiddlewareの設定)
+        "MyMW" => [
+            \App\Http\Middleware\HelloMiddleware::class,
+            \App\Http\Middleware\MyMiddleware::class,
         ],
     ];
 

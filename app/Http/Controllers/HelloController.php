@@ -118,13 +118,31 @@ class HelloController extends Controller {
     //     return view("hello.index", $data);
     // }
 
-    // 登録したファサードの使用
-    public function index(int $id = -1) {
-        MyService::setId($id);
-        $data = [
-            "msg" => MyService::say(),
-            "data" => MyService::allData(),
+    // 2-2 登録したファサードの使用
+    // public function index(int $id = -1) {
+    //     MyService::setId($id);
+    //     $data = [
+    //         "msg" => MyService::say(),
+    //         "data" => MyService::allData(),
+    //     ];
+    //     return view("hello.index", $data);
+    // }
+
+    // 2-3 ミドルウェアの使用
+    // public function index(Request $request) {
+    //     $data = [
+    //         "msg"  => $request->msg,     //ここで呼び出しているのはmiddlewareで生成したプロパティ
+    //         "data" => $request->allData, //ここで呼び出しているのはmiddlewareで生成したプロパティ
+    //     ];
+    //     return view("hello.index", $data);
+    // }
+
+    // 2-3 ミドルウェアの使用($middlewareGroupに設定した"MyMW"を使用することを想定)
+    public function index(Request $request){
+        $data =[
+            "msg" => $request->hello,    //HelloMiddlewareで設定した"hello" => $hello
+            "data" => $request->allData, //MyMiddlewareで設定した"allData" =>MyService::allData()
         ];
-        return view("hello.index", $data);
+        return view("hello.index" , $data);
     }
 }
