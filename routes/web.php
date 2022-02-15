@@ -21,36 +21,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// 2-1 サービスコンテナと結合
 // Route::get("/hello", [HelloController::class, "index"])->name("hello");
-// Route::get("/hello/{id}", [HelloController::class, "index"])->where("id", "[0-9]+");
-// Route::get("hello/other", [HelloController::class, "other"]);
+Route::get("/hello/{id?}" , [HelloController::class , "index"])->name("hello");
+Route::post("/hello" , [HelloController::class , "index"]);
 
-// 1-1
-// Route::middleware()->group(function(){})でミドルウェアを複数に設定可能
-// Route::middleware([HelloMiddleware::class])->group(function () {
-//     Route::get("hello", [HelloController::class, "index"]);
-//     Route::get("hello/other", [HelloController::class, "other"]);
-// });
-
-// // Sampleディレクトリに含まれるSampleControllerを名前空間でグループ化する
-// Route::namespace("Sample")->group(function () {
-//     Route::get("/sample", [SampleController::class, "index"]);
-//     Route::get("sample/other", [SampleController::class, "other"]);
-// });
-
-// Route::get("/hello/{person}", [HelloController::class, "index"]);
-
-// 1-2
-// Route::get("/hello",       [HelloController::class, "index"]);
-// Route::get("/hello/other", [HelloController::class, "other"]);
-// Route::get("/sample",      [SampleController::class, "index"])->name("sample");
-
-//1-3
-// Route::get("/hello", [HelloController::class, "index"])->name("hello");
-// Route::get("/hello/{msg}", [HelloController::class, "other"]);
-// ROute::post("/hello/other" , [HelloController::class , "other"]);
-
-// 1-4 request and response
-Route::get("/hello", [HelloController::class, "index"])->name("hello");
-Route::post("/hello", [HelloController::class, "index"]);
-Route::get("hello/other", [HelloController::class, "other"]);
