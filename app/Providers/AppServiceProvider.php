@@ -77,19 +77,19 @@ class AppServiceProvider extends ServiceProvider {
     // 結合時に常に呼び出される場合：第一引数にクロージャーを指定
     // 結合時に呼び出されるクラスを指定する場合：第一引数にクラス、第二引数にクロージャーを指定
     // 最終的に粗結合させる
-    public function boot() {
-        app()->resolving(function ($obj, $app) {
-            if (is_object($obj)) {
-                echo get_class($obj) . "<br>";
-            } else {
-                echo $obj . "<br>";
-            }
-        });
-        app()->resolving(PowerMyService::class, function ($obj, $app) {
-            $newData = ["ハンバーグ", "カレーライス", "唐揚げ", "餃子",];
-            $obj->setData($newData);
-            $obj->setId(rand(0, count($newData)));
-        });
-        app()->singleton("App\MyClasses\MyServiceInterface", "App\MyClasses\PowerMyService");
-    }
+    // public function boot() {
+        // app()->resolving(function ($obj, $app) {
+        //     if (is_object($obj)) {
+        //         echo get_class($obj) . "<br>";
+        //     } else {
+        //         echo $obj . "<br>";
+        //     }
+        // });
+        // app()->resolving(PowerMyService::class, function ($obj, $app) {
+        //     $newData = ["ハンバーグ", "カレーライス", "唐揚げ", "餃子",];
+        //     $obj->setData($newData);
+        //     $obj->setId(rand(0, count($newData)));
+        // });
+        // app()->singleton("App\MyClasses\MyServiceInterface", "App\MyClasses\PowerMyService");
+    // }
 }

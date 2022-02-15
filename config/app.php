@@ -174,7 +174,8 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
+        // 2-2 ファサードの利用（サービスプロバイダの登録）
+        App\Providers\MyServiceProvider::class,
     ],
 
     /*
@@ -229,7 +230,8 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-
+        // 2-2 ファサードの利用：ファサードの登録
+        'myservice' => App\Facades\MyService::class,
     ],
 
 ];

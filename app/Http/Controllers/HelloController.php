@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 
 // 2-1 サービスコンテナと結合
 // app/MyClassからMyServiceのインスタンスを取得して使用する
-use App\MyClasses\MyService;
+// use App\MyClasses\MyService;
+use App\Providers\MyServiceProvider;
+use App\Facades\MyService;
 
 class HelloController extends Controller {
 
@@ -95,14 +97,34 @@ class HelloController extends Controller {
     // }
 
     // 粗結合の実行
-    function __construct() {
-    }
-    public function index(MyServiceInterface $myservice, int $id = -1) {
-        $myservice->setId($id);
+    // function __construct() {
+    // }
+    // public function index(MyServiceInterface $myservice, int $id = -1) {
+    //     $myservice->setId($id);
+    //     $data = [
+    //         "msg"  => $myservice->say(),
+    //         "data" => $myservice->allData(),
+    //     ];
+    //     return view("hello.index" , $data);
+    // }
+
+    // 登録したサービスプロバイダの利用
+    // public function index(MyServiceInterface $myservice, int $id = -1) {
+    //     $myservice->setId($id);
+    //     $data = [
+    //         "msg"  => $myservice->say(),
+    //         "data" => $myservice->allData(),
+    //     ];
+    //     return view("hello.index", $data);
+    // }
+
+    // 登録したファサードの使用
+    public function index(int $id = -1) {
+        MyService::setId($id);
         $data = [
-            "msg"  => $myservice->say(),
-            "data" => $myservice->allData(),
+            "msg" => MyService::say(),
+            "data" => MyService::allData(),
         ];
-        return view("hello.index" , $data);
+        return view("hello.index", $data);
     }
 }
