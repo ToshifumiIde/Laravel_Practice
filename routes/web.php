@@ -36,4 +36,7 @@ Route::get('/', function () {
 // Route::get("/hello/{id?}", [HelloController::class, "index"]);
 
 // 2-3ミドルウェア(app/Http/Kernel.phpの$middlewareGroupsで設定した"MyMW"を呼び出す場合)
-Route::get("/hello" , [HelloController::class, "index"])->middleware("MyMW");
+// Route::get("/hello" , [HelloController::class, "index"])->middleware("MyMW");
+
+//3-1 DBクラスとクエリビルダ
+Route::get("/hello/{id?}" , [HelloController::class , "index"])->name("hello");

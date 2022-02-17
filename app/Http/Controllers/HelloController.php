@@ -2,147 +2,217 @@
 
 namespace App\Http\Controllers;
 
-use App\MyClasses\MyServiceInterface;
-use Illuminate\Http\Request;
-
-// 2-1 サービスコンテナと結合
-// app/MyClassからMyServiceのインスタンスを取得して使用する
-// use App\MyClasses\MyService;
-use App\Providers\MyServiceProvider;
 use App\Facades\MyService;
+use App\MyClasses\MyServiceInterface;
+use App\Providers\MyServiceProvider;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class HelloController extends Controller {
-
-    // MyService $myserviceとすることでインスタンスを生成
-    // public function index(MyService $myservice) {
+    // public function index() {
+    //     $result = DB::table("people")->get();
     //     $data = [
-    //         "msg" => $myservice->say(),
-    //         "data" => $myservice->data(),
+    //         "msg" => "Database access.",
+    //         "data" => $result,
     //     ];
     //     return view("hello.index", $data);
     // }
 
-    // 🌟app()関数を用いて明示的にインスタンスを生成する方法は次の通り🌟
-    // public function index(Request $request) {
-    //     $name = "default";
-    //     $mail = "default mail";
-    //     if($request->isMethod("post")){
-    //         $name = $request->name;
-    //         $mail = $request->mail;
+    // IDによるDBの取得条件の変更DB::table("テーブル名")->where("column" , "条件" , "値")->get();
+    // public function index(int $id = -1) {
+    //     if ($id >= 0) {
+    //         $msg    = "get ID <=" . $id;
+    //         $result = DB::table("people")->where("id", "<=", $id)->get();
+    //     } else{
+    //         $msg    = "get people records";
+    //         $result = DB::table("people")->get();
     //     }
-    //     $myservice = app("App\MyClasses\MyService");
-    //     // なお、上記の取得方法は下記の3つでも同じ結果を得られる
-    //     // $myservice = app("App\MyClasses\MyService");
-    //     // $myservice = app()->make("App\MyClasses\MyService");
-    //     // $myservice = resolve("App\MyClasses\MyService");
-    //     // $csvController  = app()->make("App\csvClasses\CsvService");
-    //     // このインスタンス生成を使えば、独自のアクションに引数を渡して対応が可能や！！
     //     $data = [
-    //         "msg"  => $myservice->say(),  //クラス内のメソッドを呼び出し
-    //         "data" => $myservice->data(), //クラス内のメソッドを呼び出し
-    //         "name" => $name,
-    //         "mail" => $mail,
+    //         "msg"  => $msg,
+    //         "data" => $result,
     //     ];
     //     return view("hello.index", $data);
     // }
 
-    // 2-1 サービスコンテナと結合
-    // 🌟app()関数内でインスタンス生成時に引数を渡す場合、app()->makeWith()メソッドを使う🌟
-    // 引数で渡す値は連想配列で渡す
-    // public function index(Request $request, int $id = -1) {
-    //     $myservice = app()->makeWith("App\MyClasses\MyService", ["id" => $id]);
+    // 曖昧検索(like)：ワイルドカードの使用(%)。where()メソッドの第三引数に%の文字列を渡す
+    // public function index($id = -1) {
+    //     if ($id >= 0) {
+    //         $msg = "get name like '" . $id . "'";
+    //         $result = DB::table("people")->where("name","like", "%" . $id . "%")->get();
+    //     } else {
+    //         $msg = "get people records.";
+    //         $result = DB::table("people")->get();
+    //     }
     //     $data = [
-    //         "msg" =>  $myservice->say(),
-    //         "data" => $myservice->allData(),
+    //         "msg" => $msg,
+    //         "data" => $result,
     //     ];
     //     return view("hello.index", $data);
     // }
 
-    // 2-1 サービスコンテナと結合
-    // MyService.phpを明示的に、Providers/AppServiceProvider.phpでapp()->bind("クラス名" , function(){});と設定した内容の呼び出し
-    // public function index(MyService $myservice, int $id = -1) {
-    //     $myservice->setId($id);
+    // whereRaw()の紹介（ただしsql文を直接記入するため、sqlインジェクションに注意）
+    // '%文字列%' と「'」または「"」で囲う必要あり
+    // whereRaw()を安全に使用する場合、
+    // 「?(プレースホルダ)」を使用し、第二引数にプレースホルダのパラメータを渡すと良い
+    // public function index($id = -1) {
+    //     if ($id >= 0) {
+    //         $msg = "get name like '" . $id . "'";
+    //         $result = DB::table("people")->whereRaw("name like '%" . $id . "%'")->get();
+    //         $result = DB::table("people")->whereRaw("name like ?" , ["%".$id. "%"] )->get();
+    //     } else {
+    //         $msg = "get people records.";
+    //         $result = DB::table("people")->get();
+    //     }
     //     $data = [
-    //         "msg"  => $myservice->say(),
-    //         "data" => $myservice->allData(),
-    //     ];
-    //     return view("hello.index", $data);
-    // }
-    // 上記内容は以下に書き換えても実行する
-    // アクションの引数に渡す代わりに、アクション内でapp()->make()で呼び出しても使用可能
-    // public function index(int $id = -1) {
-    //     $myservice = app()->make("App\MyClasses\MyService"); //🌟ここで呼び出し
-    //     $myservice->setId($id);
-    //     $data = [
-    //         "msg"  => $myservice->say(),
-    //         "data" => $myservice->allData(),
-    //     ];
-    //     return view("hello.index", $data);
-    // }
-
-    // （実行内容の記載忘れ）
-    // function __construct(MyService $myService) {
-    //     $myservice = app("App\MyClasses\MyService");
-    //     // echo "HelloControllerの__construct()の呼び出し(MyServiceの呼び出し)";
-    // }
-
-    // public function index(MyService $myservice, int $id = -1) {
-    //     $myservice->setId($id);
-    //     // echo "MyServiceの呼び出し。";
-    //     $data = [
-    //         "msg"  => $myservice->say(),
-    //         "data" => $myservice->allData(),
+    //         "msg" => $msg,
+    //         "data" => $result,
     //     ];
     //     return view("hello.index", $data);
     // }
 
-    // 粗結合の実行
-    // function __construct() {
-    // }
-    // public function index(MyServiceInterface $myservice, int $id = -1) {
-    //     $myservice->setId($id);
-    //     $data = [
-    //         "msg"  => $myservice->say(),
-    //         "data" => $myservice->allData(),
-    //     ];
-    //     return view("hello.index" , $data);
-    // }
-
-    // 登録したサービスプロバイダの利用
-    // public function index(MyServiceInterface $myservice, int $id = -1) {
-    //     $myservice->setId($id);
-    //     $data = [
-    //         "msg"  => $myservice->say(),
-    //         "data" => $myservice->allData(),
+    // 最初のレコード取得DB::table()->first()
+    // public function index() {
+    //     $msg    = "get people records.";
+    //     $first  = DB::table("people")->first();
+    //     $last   = DB::table("people")->orderBy("id", "desc")->first();
+    //     $result = [$first, $last];
+    //     $data   = [
+    //         "msg" => $msg,
+    //         "data" => $result,
     //     ];
     //     return view("hello.index", $data);
     // }
 
-    // 2-2 登録したファサードの使用
-    // public function index(int $id = -1) {
-    //     MyService::setId($id);
+    // 指定IDのレコード取得DB::table("テーブル名")->find(条件)
+    // public function index($id = -1) {
+    //     if ($id >= 0) {
+    //         $msg    = "get name like '" . $id . "'";
+    //         $result = [DB::table("people")->find($id)]; //1つの要素のみ取得するため、ここでは配列形式[]にした
+    //     } else {
+    //         $msg    = "get people records .";
+    //         $result = DB::table("people")->get();
+    //     }
     //     $data = [
-    //         "msg" => MyService::say(),
-    //         "data" => MyService::allData(),
+    //         "msg"  => $msg,
+    //         "data" => $result,
     //     ];
     //     return view("hello.index", $data);
     // }
 
-    // 2-3 ミドルウェアの使用
-    // public function index(Request $request) {
+    // 指定フィールドだけを取得：pluck
+    // public function index() {
+    //     $name   = DB::table("people")->pluck("name"); //pluckの戻り値はコレクション
+    //     $value  = $name->toArray();                   //ここで連想配列に変換(キーは0から開始する番号)
+    //     $msg    = implode(",", $value);               //ここで,区切りの文字列に変更
+    //     $result = DB::table("people")->get();         //tableの全情報を取得
+    //     $data   = [
+    //         "msg" => $msg,
+    //         "data" => $result,
+    //     ];
+    //     // dd($name, $value, $msg, $result);
+    //     return view("hello.index", $data);
+    // }
+
+    // chunkById()による分割取得
+    // public function index() {
+    //     $data   = ["msg" => "", "data" => []];
+    //     $msg    = "get :";
+    //     $result = [];
+    //     DB::table("people")->chunkById(2, function ($items) use (&$msg, &$result) {
+    //         // &は参照渡し、これを記入しないとクロージャー街の変数は別物として扱われる
+    //         foreach ($items as $item) {
+    //             $msg .= $item->id . " ";
+    //             $result += array_merge($result, [$item]);
+    //             break;  //chunkById(2,~)で2つずつ区切って、1つ目の処理が完了した時点でbreakすることで、偶数番目の処理を実行させない
+    //         }
+    //         return true;
+    //     });
     //     $data = [
-    //         "msg"  => $request->msg,     //ここで呼び出しているのはmiddlewareで生成したプロパティ
-    //         "data" => $request->allData, //ここで呼び出しているのはmiddlewareで生成したプロパティ
+    //         "msg" => $msg,
+    //         "data" => $result,
     //     ];
     //     return view("hello.index", $data);
     // }
 
-    // 2-3 ミドルウェアの使用($middlewareGroupに設定した"MyMW"を使用することを想定)
-    public function index(Request $request){
-        $data =[
-            "msg" => $request->hello,    //HelloMiddlewareで設定した"hello" => $hello
-            "data" => $request->allData, //MyMiddlewareで設定した"allData" =>MyService::allData()
-        ];
-        return view("hello.index" , $data);
-    }
+    // orderBy と chunk の使用(別の基準でレコードを並び替えて分割処理したい場合、chunkを使用する)
+    // chunkはorderByとセットで使用する必要がある
+    // public function index() {
+    //     $data   = ["msg" => "", "data" => []];
+    //     $msg    = "get : ";
+    //     $result = [];
+    //     DB::table("people")->orderBy("name", "asc")->chunk(2, function ($items) use (&$msg, &$result) {
+    //         // &は参照渡し
+    //         foreach ($items as $item) {
+    //             $msg .= $item->id . ":" . $item->name . " ";
+    //             $result += array_merge($result, [$item]);
+    //             break;
+    //         }
+    //         return true;
+    //     });
+    //     $data = [
+    //         "msg" => $msg,
+    //         "data" => $result,
+    //     ];
+    //     return view("hello.index", $data);
+    // }
+
+    // 一部だけ抜き出して処理する
+    // (chunkとorderByの併用による条件設定：今回はパラメータに渡した数字番目のchunk処理を実行する)
+    // public function index($id) {
+    //     $data   = ["msg" => "", "data" => []];
+    //     $msg    = "get : ";
+    //     $result = []; // 結果格納用の空配列を設定
+    //     $count  = 0;   // 初期値0
+    //     DB::table("people")->chunkById(3, function ($items) use (&$msg, &$result, &$id, &$count) {
+    //         // use(&$~~)の部分は参照渡し。use(&$~~)としない場合、関数外の変数を参照できない
+    //         if ($count == $id) {
+    //             foreach ($items as $item) {
+    //                 $msg .= $item->id . ":" . $item->name . " ";
+    //                 $result += array_merge($result, [$item]);
+    //             }
+    //             return false;
+    //         }
+    //         $count++;
+    //         return true;
+    //     });
+    //     $data = [
+    //         "msg"  => $msg,
+    //         "data" => $result,
+    //     ];
+    //     return view("hello.index", $data);
+    // }
+
+    // whereでの条件設定
+    // and条件：$result = DB::table("people")->where("id" , ">=" , 10)->where("id" , "<=" ,20)->get();    // 10~20の間
+    // or条件： $result = DB::table("people")->where("id" , "<=" , 10)->orWhere("id" , ">=" , 20)->get(); // 10以下、または20以上
+
+    // 2つの値の範囲の設定
+    // public function index($id) {
+    //     $ids    = explode(",", $id);
+    //     // dd($ids); //[ 0 => "3", 1 => "5" ];
+    //     $msg    = "get people.";
+    //     $result = DB::table("people")
+    //         ->whereBetween("id", $ids)
+    //         ->get();
+    //     $data   = [
+    //         "msg"  => $msg,
+    //         "data" => $result,
+    //     ];
+    //     return view("hello.index", $data);
+    // }
+
+    // 条件が複数にまたがる場合の検索値(whereIn , orWhereIn , whereNotIn , orWhereNotIn)
+    // public function index($id) {
+    //     $ids    = explode(",", $id);
+    //     $msg    = "get people";
+    //     $result = DB::table("people")->whereIn("id", $ids)->get();
+    //     $data   = [
+    //         "msg" => $msg,
+    //         "data" => $result,
+    //     ];
+    //     return view("hello.index", $data);
+    // }
+
+    // nullのチェック(whereNull , orWhereNull , whereNotNull , orWhereNotNull)
+    
 }

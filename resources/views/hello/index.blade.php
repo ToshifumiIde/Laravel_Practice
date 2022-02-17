@@ -9,18 +9,11 @@
 <body>
     <h1>Hello / Index</h1>
     <p>{{$msg}}</p>
-    <p>{{$name ?? ""}}</p>
-    <p>{{$mail ?? ""}}</p>
-    <ul>
-        @foreach ($data as  $item)
-        <li>{{$item}}</li>
+    <ol>
+        @foreach ($data as $item)
+        <li>{{$item->name}} [{{$item->mail}} , {{$item->age}}]</li>
         @endforeach
-    </ul>
-    {{-- <form action="/hello" method="post">
-    @csrf
-        <input type="text" name="name" placeholder="お名前">
-    <input type="mail" name="mail" placeholder="メールアドレス">
-    <input type="submit">
-    </form> --}}
+    </ol>
+    <hr>
 </body>
 </html>
