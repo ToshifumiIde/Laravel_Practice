@@ -255,17 +255,108 @@ class HelloController extends Controller {
     // }
 
     // 3-2 自作したペジネーションの使用
+    // public function index(Request $request) {
+    //     $id     = $request->query("page"); //クエリパラメータに渡された?page=~の部分
+    //     $msg    = "show page: " . $id;
+    //     $result = Person::paginate(3);
+    //     $paginator = new MyPaginator($result); //作成したクラスのインスタンス生成
+    //     $data = [
+    //         "msg" => $msg,
+    //         "data" => $result,
+    //         "paginator" => $paginator,
+    //     ];
+    //     return view("hello.index", $data);
+    // }
+
+    // 3-3 Eloquent モデルの基本形
+    // public function index(Request $request){
+    //     $msg = "show people records.";
+    //     $result = Person::get(); //ここでModelのPersonのスコープ定義演算子,staticメソッドを用いてget()している
+    //     // dd($result);
+    //     $data = [
+    //         "msg" => $msg,
+    //         "data" => $result,
+    //     ];
+
+    //     return view("hello.index" , $data);
+    // }
+
+    // コレクション(Illuminate\Database\Eloquent名前空間にあるCollectionのインスタンス)の機能：rejectとfilter
+    // public function index(Request $request) {
+    //     $msg = "show people record";
+    //     $result = Person::get();
+    //     // Person::get()から取得するレコードを排除する(今回はreturn $person->age < 20;とし、未成年を除外するコード)
+    //     $result = Person::get()->reject(function ($person) {
+    //         return $person->age < 20;
+    //     });
+    //     // Person::get()から取得するレコードを選択する(以下の場合、20歳以下を取得する)
+    //     $result = Person::get()->filter(function ($person) {
+    //         return $person->age <= 20;
+    //     });
+
+    //     $data = [
+    //         "msg" => $msg,
+    //         "data" => $result,
+    //     ];
+    //     return view("hello.index", $data);
+    // }
+
+    // 差分を確認する->diff(引数は取得したインスタンス)
+    // public function index(Request $request){
+    //     $msg    = "show people record.";
+    //     $result = Person::get()->filter(function($person){
+    //         return $person->age < 50;
+    //     });
+    //     $result2 = Person::get()->filter(function($person){
+    //         return $person->age >= 20;
+    //     });
+    //     // $result->diff($result2)とすることで、引数に該当しないデータを取得することが可能
+    //     $result3 = $result->diff($result2);
+
+    //     $data = [
+    //         "msg" => $msg,
+    //         "data" => $result3,
+    //     ];
+    //     return view("hello.index" , $data);
+    // }
+
+    // Person::get()->modelKeys()でテーブルのキーのみを取得
+    // public function index(Request $request) {
+    //     $msg  = "show people record.";
+    //     $keys = Person::get()->modelKeys(); //テーブルのキーだけをまとめ、取り出すことが可能
+    //     // array_filter()メソッドを使用して、IDが偶数のみ取得
+    //     $even = array_filter($keys, function ($key) {
+    //         return $key % 2 == 0;
+    //     });
+    //     $odd = array_filter($keys, function ($key) {
+    //         return $key % 2 == 1;
+    //     });
+    //     $result = Person::get()->only($even);
+    //     $result = Person::get()->only($odd);
+    //     $data   = [
+    //         "msg" => $msg,
+    //         "data" => $result,
+    //     ];
+    //     return view("hello.index", $data);
+    // }
+
+    // コレクションの機能：mergeとunique
     public function index(Request $request) {
-        $id     = $request->query("page"); //クエリパラメータに渡された?page=~の部分
-        $msg    = "show page: " . $id;
-        $result = Person::paginate(3);
-        $paginator = new MyPaginator($result); //作成したクラスのインスタンス生成
+        $msg = "show people record";
+        // 取得したレコードのidが偶数のレコードを取得
+        $even = Person::get()->filter(function ($item) {
+            return $item->id % 2 == 0;
+        });
+        // 取得したレコードからageが偶数のものを取得
+        $even2 = Person::get()->filter(function ($item) {
+            return $item->age % 2 == 0;
+        });
+        // $evenと$even2を統合したレコード
+        $result = $even->merge($even2);
         $data = [
             "msg" => $msg,
             "data" => $result,
-            "paginator" => $paginator,
         ];
-
         return view("hello.index", $data);
     }
 }
