@@ -7,6 +7,8 @@ use App\MyClasses\MyServiceInterface;
 use App\Providers\MyServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Pagination\MyPaginator;
+use App\Person;
 
 class HelloController extends Controller {
     // public function index() {
@@ -23,7 +25,7 @@ class HelloController extends Controller {
     //     if ($id >= 0) {
     //         $msg    = "get ID <=" . $id;
     //         $result = DB::table("people")->where("id", "<=", $id)->get();
-    //     } else{
+    //     } else {
     //         $msg    = "get people records";
     //         $result = DB::table("people")->get();
     //     }
@@ -70,7 +72,7 @@ class HelloController extends Controller {
     //     return view("hello.index", $data);
     // }
 
-    // 最初のレコード取得DB::table()->first()
+    // 最初のレコード取得DB::table()->first(); この場合->get()メソッドにメソッドチェーンを渡す必要はない
     // public function index() {
     //     $msg    = "get people records.";
     //     $first  = DB::table("people")->first();
@@ -83,7 +85,7 @@ class HelloController extends Controller {
     //     return view("hello.index", $data);
     // }
 
-    // 指定IDのレコード取得DB::table("テーブル名")->find(条件)
+    // 指定IDのレコード取得DB::table("テーブル名")->find(条件); この場合も->get()メソッドに繋ぐ必要はない
     // public function index($id = -1) {
     //     if ($id >= 0) {
     //         $msg    = "get name like '" . $id . "'";
@@ -214,5 +216,56 @@ class HelloController extends Controller {
     // }
 
     // nullのチェック(whereNull , orWhereNull , whereNotNull , orWhereNotNull)
-    
+
+    // 3-2 paginationの実行 ->paginate(1ページ辺りのレコード数 , フィールド , ページの名前 , 取得するページの番号)
+    // public function index($id){
+    //     $msg = "show page : " . $id;
+    //     $result = DB::table("people")->paginate(3, ["*"] , "page" , $id);
+    //     $data = [
+    //         "msg" => $msg,
+    //         "data" => $result,
+    //     ];
+    //     return view("hello.index" , $data);
+    // }
+
+    // ナビゲーションリンクの設置
+    // public function index(Request $request) {
+    //     $id = $request->query("page");
+    //     $msg = "show page: " . $id;
+    //     $result = DB::table("people")->paginate(3, ["*"], "page",  $id);
+    //     $data = [
+    //         "msg" => $msg,
+    //         "data" => $result,
+    //     ];
+    //     return view("hello.index", $data);
+    //     // （ペジネーションで使用するリンクのスタイルにbootstrapのものを適用する/bootstrap/app.phpに追記）
+    // }
+
+    // simplePaginate()の使用
+    // public function index(Request $request) {
+    //     $id = $request->query("page");
+    //     $msg = "show page: " . $id;
+    //     $result = DB::table("people")->simplePaginate(3);
+    //     $data = [
+    //         "msg" => $msg,
+    //         "data" => $result,
+    //     ];
+
+    //     return view("hello.index", $data);
+    // }
+
+    // 3-2 自作したペジネーションの使用
+    public function index(Request $request) {
+        $id     = $request->query("page"); //クエリパラメータに渡された?page=~の部分
+        $msg    = "show page: " . $id;
+        $result = Person::paginate(3);
+        $paginator = new MyPaginator($result); //作成したクラスのインスタンス生成
+        $data = [
+            "msg" => $msg,
+            "data" => $result,
+            "paginator" => $paginator,
+        ];
+
+        return view("hello.index", $data);
+    }
 }
