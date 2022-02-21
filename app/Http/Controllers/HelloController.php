@@ -11,17 +11,20 @@ use App\Http\Pagination\MyPaginator;
 use App\Person;
 
 class HelloController extends Controller {
+
+    // DB::table("テーブル名")->get();によるレコードの全件取得
     // public function index() {
     //     $result = DB::table("people")->get();
     //     $data = [
     //         "msg" => "Database access.",
-    //         "data" => $result,
+    //         "data" => $result, //配列で取得するから、view側でforeach文回す
     //     ];
-    //     return view("hello.index", $data);
+    //     return view("hello.index", $data); //returnで連想配列を第二引数で渡す
     // }
 
     // IDによるDBの取得条件の変更DB::table("テーブル名")->where("column" , "条件" , "値")->get();
     // public function index(int $id = -1) {
+    //     //where("id" , "<=" , "値")->get();をとすることで、値以下のidを取得可能
     //     if ($id >= 0) {
     //         $msg    = "get ID <=" . $id;
     //         $result = DB::table("people")->where("id", "<=", $id)->get();
@@ -36,17 +39,17 @@ class HelloController extends Controller {
     //     return view("hello.index", $data);
     // }
 
-    // 曖昧検索(like)：ワイルドカードの使用(%)。where()メソッドの第三引数に%の文字列を渡す
+    // 曖昧検索(like)：ワイルドカードの使用(%)。where()メソッドの第三引数に%文字列を渡す("%" . "値" . "%")で繋ぐ
     // public function index($id = -1) {
     //     if ($id >= 0) {
-    //         $msg = "get name like '" . $id . "'";
+    //         $msg    = "get name like '" . $id . "'";
     //         $result = DB::table("people")->where("name","like", "%" . $id . "%")->get();
     //     } else {
-    //         $msg = "get people records.";
+    //         $msg    = "get people records.";
     //         $result = DB::table("people")->get();
     //     }
     //     $data = [
-    //         "msg" => $msg,
+    //         "msg"  => $msg,
     //         "data" => $result,
     //     ];
     //     return view("hello.index", $data);
@@ -58,11 +61,11 @@ class HelloController extends Controller {
     // 「?(プレースホルダ)」を使用し、第二引数にプレースホルダのパラメータを渡すと良い
     // public function index($id = -1) {
     //     if ($id >= 0) {
-    //         $msg = "get name like '" . $id . "'";
+    //         $msg    = "get name like '" . $id . "'";
     //         $result = DB::table("people")->whereRaw("name like '%" . $id . "%'")->get();
-    //         $result = DB::table("people")->whereRaw("name like ?" , ["%".$id. "%"] )->get();
+    //         $result = DB::table("people")->whereRaw("name like ?" , ["%" . $id . "%"])->get();
     //     } else {
-    //         $msg = "get people records.";
+    //         $msg    = "get people records.";
     //         $result = DB::table("people")->get();
     //     }
     //     $data = [
@@ -89,7 +92,8 @@ class HelloController extends Controller {
     // public function index($id = -1) {
     //     if ($id >= 0) {
     //         $msg    = "get name like '" . $id . "'";
-    //         $result = [DB::table("people")->find($id)]; //1つの要素のみ取得するため、ここでは配列形式[]にした
+    //         $result = [DB::table("people")->find($id)];
+    //         // 1つの要素のみ取得するため、ここでは配列形式[]にした。view側で連想配列の処理をしているため。
     //     } else {
     //         $msg    = "get people records .";
     //         $result = DB::table("people")->get();
@@ -341,22 +345,38 @@ class HelloController extends Controller {
     // }
 
     // コレクションの機能：mergeとunique
-    public function index(Request $request) {
-        $msg = "show people record";
-        // 取得したレコードのidが偶数のレコードを取得
-        $even = Person::get()->filter(function ($item) {
-            return $item->id % 2 == 0;
-        });
-        // 取得したレコードからageが偶数のものを取得
-        $even2 = Person::get()->filter(function ($item) {
-            return $item->age % 2 == 0;
-        });
-        // $evenと$even2を統合したレコード
-        $result = $even->merge($even2);
-        $data = [
-            "msg" => $msg,
-            "data" => $result,
-        ];
-        return view("hello.index", $data);
-    }
+    // public function index(Request $request) {
+    //     $msg = "show people record";
+    //     // 取得したレコードのidが偶数のレコードを取得
+    //     $even = Person::get()->filter(function ($item) {
+    //         return $item->id % 2 == 0;
+    //     });
+    //     // 取得したレコードからageが偶数のものを取得
+    //     $even2 = Person::get()->filter(function ($item) {
+    //         return $item->age % 2 == 0;
+    //     });
+    //     // $evenと$even2を統合したレコード
+    //     $result = $even->merge($even2);
+    //     $data = [
+    //         "msg" => $msg,
+    //         "data" => $result,
+    //     ];
+    //     return view("hello.index", $data);
+    // }
+
+    // mapによるコレクション生成get()->filter()->map(function($item , $key){return "処理"});
+        public function index(Request $request){
+            $msg = "show people record: ";
+            $even = Person::get()->filter(function($item){
+                return $item->id % 2 == 0;
+            });
+            $map = $even->map(function ($item , $key){
+                return $item->id . " : " . $item->name;
+            });
+            $data = [
+                "msg" => $map,
+                "data" => $even,
+            ];
+            return view("hello.index" , $data);
+        }
 }
