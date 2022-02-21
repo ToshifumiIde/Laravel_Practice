@@ -9,8 +9,25 @@
 </head>
 <body>
     <h1>Hello / Index</h1>
-    {{-- <p>{{$msg}}</p> --}}
-    {{-- <table border="1">
+    <p>{{$msg}}</p>
+    {{-- <ul>
+        <li id="name"></li>
+        <li id="mail"></li>
+        <li id="tel"></li>
+    </ul> --}}
+    {{-- <div class="">
+        <input type="number" id="id" value="1">
+        <button id="button">Click</button>
+    </div> --}}
+
+    <form action="/hello" method="post" >
+        @csrf
+        ID : <input type="text" id="id" name="id">
+        <input type="submit">
+    </form>
+
+    <hr>
+    <table border="1">
         @foreach($data as $item)
         <tr>
             <th>{{$item->id}}</th>
@@ -21,13 +38,13 @@
             {{-- 3-4 アクセサ(app/Person.phpの中で作成したgat~Attribute(){}メソッド)の呼び出し --}}
             {{-- <th>{{$item->name_and_id}}</th> --}}
             {{-- <th>{{$item->name_and_age}}</th> --}}
-            {{-- <th>{{$item->name_and_mail}}</th>
-            <th>{{$item->all_data}}</th> --}}
+            {{-- <th>{{$item->name_and_mail}}</th>--}}
+            <th>{{$item->all_data}}</th>
             {{-- 3-4 アクセサによるプロパティの変更の呼び出し(登録名の大文字表示) --}}
             {{-- <th>{{$item->name}}</th> --}}
-        {{-- </tr> --}}
-        {{-- @endforeach --}}
-    {{-- </table> --}}
+        </tr>
+        @endforeach
+    </table>
     {{--<ol>
         @foreach ($data as $item)
         <li>{{$item->name}} [{{$item->mail}} , {{$item->age}}]</li>
@@ -36,17 +53,8 @@
     <hr> --}}
     {{-- {!!$data->links()!!} --}}
     {{-- {!!$paginator->link()!!} --}}
-    <div class="">
-        <input type="number" id="id" value="1">
-        <button id="button">Click</button>
-    </div>
-    <ul>
-        <li id="name"></li>
-        <li id="mail"></li>
-        <li id="tel"></li>
-    </ul>
 
-<script src="{{asset('/js/index.js')}}"></script>
+{{-- <script src="{{asset('/js/index.js')}}"></script> --}}
 {{-- <script>
     function doAction() {
         let id = document.getElementById("id").value;
