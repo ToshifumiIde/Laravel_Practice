@@ -365,18 +365,60 @@ class HelloController extends Controller {
     // }
 
     // mapによるコレクション生成get()->filter()->map(function($item , $key){return "処理"});
-        public function index(Request $request){
-            $msg = "show people record: ";
-            $even = Person::get()->filter(function($item){
-                return $item->id % 2 == 0;
-            });
-            $map = $even->map(function ($item , $key){
-                return $item->id . " : " . $item->name;
-            });
-            $data = [
-                "msg" => $map,
-                "data" => $even,
-            ];
-            return view("hello.index" , $data);
+    // public function index(Request $request){
+    //     $msg = "show people record: ";
+    //     $even = Person::get()->filter(function($item){
+    //         return $item->id % 2 == 0;
+    //     });
+    //     $map = $even->map(function ($item , $key){
+    //         return $item->id . " : " . $item->name;
+    //     });
+    //     $data = [
+    //         "msg" => $map,
+    //         "data" => $even,
+    //     ];
+    //     return view("hello.index" , $data);
+    // }
+
+    // 3-4 app/Person.phpで作成したclassでモデルクラスのインスタンスを生成し、プロパティを取得する
+    public function index() {
+        $msg = "show people record: ";
+        $re  = Person::get();  //Eloquentにてモデルからレコードを取得
+        // $re2 = Person::all(); //get()メソッドもall()メソッドも一緒ぽい
+        // dd($re, $re2); //get()とall()とほぼ似た結果が返った(現時点で不明)
+        // 自作したfields()メソッドを使用app/Person.phpのpublic function fields(){}で設定
+        $fields = Person::get()->fields(); //return array_keys()で取得されたkeyの配列
+        $data = [
+            "msg" => "[" . implode(",", $fields) . "]",
+            "data" => $re,
+        ];
+        return view("hello.index", $data);
+    }
+
+    // find()メソッドで、指定したidのモデルクラスのインスタンスを受け取り、値を変更して保存
+    public function save($id, $name) {
+        $record = Person::find($id); //find()メソッドでidを検索してレコードを取得
+        // dd($record);
+        $record->name = $name;
+        $record->save();
+        return redirect()->route("hello");
+    }
+
+    // Route::get("hello/other" , [~~]);にアクセスしたらダミーデータを生成するメソッド
+    public function other() {
+        $person = new Person();
+        $person->all_data = ["other", "bbb@ccc", 1234]; //ダミーデータ
+        $person->save();
+
+        return redirect()->route("hello");
+    }
+
+    // toJson()メソッドを使用した、json形式での値の取得
+    public function json($id = -1) {
+        if ($id == -1) {
+            return Person::get()->toJson();
+        } else {
+            return Person::find($id)->toJson();
         }
+    }
 }

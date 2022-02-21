@@ -39,4 +39,11 @@ Route::get('/', function () {
 // Route::get("/hello" , [HelloController::class, "index"])->middleware("MyMW");
 
 //3-1 DBクラスとクエリビルダ
-Route::get("/hello/{id?}" , [HelloController::class , "index"])->name("hello");
+Route::get("/hello/{id?}", [HelloController::class, "index"])->name("hello")->where(["id" => "[0-9]+"]);
+
+// 3-4 ミューテータ
+Route::get("hello/other", [HelloController::class, "other"]);
+Route::get("hello/{id?}/{name?}", [HelloController::class, "save"])->name("hello.save")->where(["id" => "[0-9]+"]);
+
+// 3-4 json形式でのレコード取得
+Route::get("hello/json/{id?}" , [HelloController::class , "json"])->name("hello.json")->where(["id" => "[0-9]+"]);
