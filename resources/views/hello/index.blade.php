@@ -22,10 +22,10 @@
 
     <form action="/hello" method="post" >
         @csrf
+        {{-- <input type="hidden" name="_token" value="{{csrf_token()}}"> --}}
         ID : <input type="text" id="id" name="id">
         <input type="submit">
     </form>
-
     <hr>
     <table border="1">
         @foreach($data as $item)

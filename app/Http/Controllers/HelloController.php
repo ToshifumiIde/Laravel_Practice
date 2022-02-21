@@ -87,9 +87,12 @@ class HelloController extends Controller {
         $id = $request->id; //ユーザーの入力したIDの取得
         $person = Person::find($id); //取得したIDでPerson::find($id)を用いてコレクション（モデルクラスのインスタンス）を取得
         // dd($person);
-        dispatch(function () use ($person) {
-            Storage::append("person_access_log.txt", $person->all_data);
-        });
+        dispatch(
+            // コールバック関数内では、引数はuse("値")で取得する
+            function () use ($person) {
+                Storage::append("person_access_log.txt", $person->all_data);
+            }
+        );
         return redirect()->route("hello");
     }
 }

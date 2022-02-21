@@ -51,4 +51,4 @@ Route::get('/', function () {
 // 4-1 キューとジョブ
 // Route::get("hello/{person?}", [HelloController::class, "index"])->name("hello.person");
 Route::get("/hello", [HelloController::class, "index"])->name("hello");
-Route::post("/hello", [HelloController::class, "send"]);
+Route::post("hello", [HelloController::class, "send"]);
