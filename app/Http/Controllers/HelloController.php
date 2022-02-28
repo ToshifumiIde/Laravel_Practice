@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\DB;
 use App\Person;
 use Illuminate\Support\Facades\Storage;
 
+use App\Events\PersonEvent;
+
+
 class HelloController extends Controller {
     //
     // public function index(Person $person) {
@@ -46,14 +49,27 @@ class HelloController extends Controller {
         ];
         return view("hello.index", $data);
     }
+    // public function send(Request $request) {
+    //     $id = $request->id;
+    //     $person = Person::find($id);
+    //     // dd($person);
+    //     dispatch(function () use ($person) {
+    //         Storage::append('person_access_log.txt', $person->all_data);
+    //         dd($person);
+    //     });
+    //     return redirect()->route("hello");
+    // }
+
+    // 4-2 Event
     public function send(Request $request) {
         $id = $request->id;
         $person = Person::find($id);
-        // dd($person);
-        dispatch(function () use ($person) {
-            Storage::append('person_access_log.txt', $person->all_data);
-            dd($person);
-        });
-        return redirect()->route("hello");
+        event(new PersonEvent($person));
+        $data = [
+            "input" => "",
+            "msg" => 'id=' . $id,
+            "data" => [$person],
+        ];
+        return view("hello.index", $data);
     }
 }
