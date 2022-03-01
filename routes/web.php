@@ -19,4 +19,6 @@ Route::get('/', function () {
 });
 
 Route::get("/hello", [HelloController::class, "index"])->name("hello");
-Route::post("/hello", [HelloController::class, "send"])->name("hello.post");
+// Route::post("/hello", [HelloController::class, "send"])->name("hello.post");
+Route::get("hello/json", [HelloController::class, "json"]);
+Route::get("hello/json/{id?}", [HelloController::class, "json"]);
