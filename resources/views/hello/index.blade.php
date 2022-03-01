@@ -39,7 +39,8 @@
 </body>
 </html> --}}
 
-<!DOCTYPE html>
+{{-- 5-1 Vueの使用 --}}
+{{-- <!DOCTYPE html>
 <html lang="ja">
 <head>
     <link rel="stylesheet" href="{{mix('css/app.css')}}">
@@ -57,5 +58,33 @@
     <my-component></my-component>
 </div>
     <script src="{{mix('js/app.js')}}"></script>
+</body>
+</html> --}}
+
+{{-- 5-2 Reactの使用 --}}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{{mix('css/app.css')}}" type="text/css">
+    <meta name="csrf-token" content="{{csrf_token()}}">
+    <title>Document</title>
+</head>
+<body>
+<h1>Hello/Index</h1>
+<p>{{$msg}}</p>
+
+<ul>
+    @foreach ($data as $item)
+    <li>
+        {{$item->name}} : {{$item->email}}({{$item->age}})
+    </li>
+    @endforeach
+</ul>
+<div id="example"></div>
+<div id="mycomponent"></div>
+<script src="{{asset('js/app.js')}}"></script>
 </body>
 </html>
