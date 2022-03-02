@@ -29,20 +29,40 @@ class HelloController extends Controller {
     // }
 
     // 5-2 Reactの利用
-    public function index() {
-        $result = Person::all();
+    // public function index() {
+    //     $result = Person::all();
+    //     $data = [
+    //         "msg" => "This is React application",
+    //         "data" => $result,
+    //     ];
+    //     return view('hello.index', $data);
+    // }
+
+    // public function json($id = -1) {
+    //     if ($id == -1) {
+    //         return Person::all()->toJson();
+    //     } else {
+    //         return Person::find($id)->toJson();
+    //     }
+    // }
+
+    // 7-1 Artisanコマンドの利用
+
+    public function index($id = -1) {
+        if ($id > 0) {
+            $msg = "id = " . $id;
+            $result = [Person::find($id)];
+        } else {
+            $msg = "all people data";
+            $result = Person::all();
+        }
         $data = [
-            "msg" => "This is React application",
+            "msg" => $msg,
             "data" => $result,
         ];
-        return view('hello.index', $data);
-    }
 
-    public function json($id = -1) {
-        if ($id == -1) {
-            return Person::all()->toJson();
-        } else {
-            return Person::find($id)->toJson();
-        }
+        dump($data);
+        // dd($data);
+        return view("hello.index", $data);
     }
 }

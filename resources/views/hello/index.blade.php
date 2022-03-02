@@ -79,12 +79,13 @@
 <ul>
     @foreach ($data as $item)
     <li>
-        {{$item->name}} : {{$item->email}}({{$item->age}})
+        {{-- {{$item->name}} : {{$item->email}}({{$item->age}}) --}}
+        {{$item->all_data}}
     </li>
     @endforeach
 </ul>
-<div id="example"></div>
-<div id="mycomponent"></div>
+{{-- <div id="example"></div>
+<div id="mycomponent"></div> --}}
 <script src="{{asset('js/app.js')}}"></script>
 </body>
 </html>
