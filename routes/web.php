@@ -23,3 +23,4 @@ Route::get("/hello/{id}", [HelloController::class, "index"])->where("id", "[0-9]
 // Route::post("/hello", [HelloController::class, "send"])->name("hello.post");
 Route::get("hello/json", [HelloController::class, "json"]);
 Route::get("hello/json/{id?}", [HelloController::class, "json"]);
+Route::get("hello/clear", [HelloController::class, "clear"]);

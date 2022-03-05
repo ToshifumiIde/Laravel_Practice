@@ -76,16 +76,16 @@
 <h1>Hello/Index</h1>
 <p>{{$msg}}</p>
 
-<ul>
-    @foreach ($data as $item)
-    <li>
+{{-- <ul> --}}
+    {{-- @foreach ($data as $item) --}}
+    {{-- <li> --}}
         {{-- {{$item->name}} : {{$item->email}}({{$item->age}}) --}}
-        {{$item->all_data}}
-    </li>
-    @endforeach
-</ul>
+        {{-- {{$item->all_data}} --}}
+    {{-- </li> --}}
+    {{-- @endforeach --}}
+{{-- </ul> --}}
 {{-- <div id="example"></div>
 <div id="mycomponent"></div> --}}
-<script src="{{asset('js/app.js')}}"></script>
+{{-- <script src="{{asset('js/app.js')}}"></script> --}}
 </body>
 </html>
