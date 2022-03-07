@@ -17,3 +17,10 @@ use Illuminate\Support\Facades\Artisan;
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
+
+Artisan::command("person{id}", function (){
+    $id = $this->argument("id");
+    $person = App\Person::find($id);
+    $this->question("id = $id");
+    $this->line($person->all_data);
+});
